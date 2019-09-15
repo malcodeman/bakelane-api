@@ -5,7 +5,8 @@ async function routes(fastify) {
     method: "POST",
     url: "/auth/signup",
     handler: async function(request, reply) {
-      const data = await signup();
+      const { email, username, password } = request.body;
+      const data = await signup(email, username, password);
 
       reply.send(data);
     }
