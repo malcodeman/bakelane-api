@@ -3,18 +3,31 @@ import User from "./usersModel";
 export async function create(email, username, password) {
   const user = await User.create({ email, username, password });
 
-  if (user) {
-    return {
-      id: user.id,
-      email: user.email,
-      username: user.username,
-      createdAt: user.createdAt
-    };
-  } else {
-    throw new Error("CanNotCreateUserException");
-  }
+  return user;
+}
+
+export async function findByEmail(email) {
+  const user = await User.findOne({
+    where: {
+      email
+    }
+  });
+
+  return user;
+}
+
+export async function findByUsername(username) {
+  const user = await User.findOne({
+    where: {
+      username
+    }
+  });
+
+  return user;
 }
 
 export default {
-  create
+  create,
+  findByEmail,
+  findByUsername
 };
