@@ -6,6 +6,24 @@ import { EXPIRES_IN } from "./authConstants";
 
 const { PRIVATE_KEY } = process.env;
 
+export async function checkIfEmailExists(email) {
+  const exists = await usersDAL.findByEmail(email);
+
+  if (exists) {
+    return { exists: true };
+  }
+  return { exists: false };
+}
+
+export async function checkIfUsernameExists(username) {
+  const exists = await usersDAL.findByUsername(username);
+
+  if (exists) {
+    return { exists: true };
+  }
+  return { exists: false };
+}
+
 export async function signup(email, username, password) {
   if (await usersDAL.findByEmail(email)) {
     throw new Error("EmailExistsException");
