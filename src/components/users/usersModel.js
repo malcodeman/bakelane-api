@@ -1,6 +1,7 @@
 import Sequelize from "sequelize";
 
 import sequelize from "../../connection";
+import Order from "../orders/ordersModel";
 
 const User = sequelize.define("user", {
   email: {
@@ -27,5 +28,7 @@ const User = sequelize.define("user", {
     }
   }
 });
+
+Order.belongsTo(User);
 
 export default User;
