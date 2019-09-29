@@ -4,7 +4,7 @@ import { requireAuthentication } from "../auth/authMiddleware";
 async function routes(fastify) {
   fastify.route({
     method: "POST",
-    url: "/orders/new",
+    url: "/orders",
     schema: {
       headers: {
         type: "object",
@@ -22,6 +22,15 @@ async function routes(fastify) {
           }
         },
         required: ["title", "description"]
+      },
+      response: {
+        200: {
+          type: "object",
+          properties: {
+            title: { type: "string" },
+            description: { type: "string" }
+          }
+        }
       }
     },
     preHandler: function(request, reply, done) {
