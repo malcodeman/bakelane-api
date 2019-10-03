@@ -1,20 +1,21 @@
 import Sequelize from "sequelize";
+import path from "path";
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: "0.0.0.0",
-    dialect: "sqlite",
-    pool: {
-      max: 5,
-      min: 0,
-      idle: 10000
-    },
-    storage: ".data/database.sqlite3"
-  }
-);
+import utils from "./utils";
+import { DB } from "./constants";
+
+utils.makeDirectory(DB.FOLDER_NAME);
+
+const sequelize = new Sequelize(DB.NAME, DB.USER, DB.PASSWORD, {
+  host: "0.0.0.0",
+  dialect: "sqlite",
+  pool: {
+    max: 5,
+    min: 0,
+    idle: 10000
+  },
+  storage: path.join(`${DB.FOLDER_NAME}/${DB.FILE_NAME}`)
+});
 
 sequelize.sync({ force: true });
 
