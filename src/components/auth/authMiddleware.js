@@ -16,7 +16,7 @@ export function requireAuthentication(header) {
     const decoded = jwt.verify(token, PRIVATE_KEY);
 
     return decoded.id;
-  } catch {
-    throw Error("Invalid JWT");
+  } catch (error) {
+    throw Error("Invalid JWT", error);
   }
 }

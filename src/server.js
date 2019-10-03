@@ -5,8 +5,8 @@ const PORT = process.env.PORT;
 async function start() {
   try {
     await app.listen(PORT);
-  } catch (err) {
-    app.log.error(err);
+  } catch (error) {
+    app.log.error(error);
     process.exit(1);
   }
 }
