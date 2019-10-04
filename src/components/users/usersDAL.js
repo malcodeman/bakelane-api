@@ -26,8 +26,19 @@ export async function findByUsername(username) {
   return user;
 }
 
+export async function findById(id) {
+  const user = await User.findOne({
+    where: {
+      id
+    }
+  });
+
+  return user;
+}
+
 export default {
   create,
   findByEmail,
-  findByUsername
+  findByUsername,
+  findById
 };
