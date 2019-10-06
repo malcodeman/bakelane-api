@@ -26,10 +26,14 @@ async function routes(fastify) {
       }
     },
     preHandler: function(request, reply, done) {
-      const userId = requireAuthentication(request.headers);
+      try {
+        const userId = requireAuthentication(request.headers);
 
-      request.userId = userId;
-      done();
+        request.userId = userId;
+        done();
+      } catch (error) {
+        reply.code(401).send(error);
+      }
     },
     handler: async function(request, reply) {
       const data = await usersDAL.findById(request.userId);
