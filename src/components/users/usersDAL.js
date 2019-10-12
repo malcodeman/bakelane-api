@@ -81,6 +81,9 @@ export async function updatePassword(
   }
   const user = await findById(id);
 
+  if (user === null) {
+    throw new Error("UserNotFoundException");
+  }
   if (await argon.verify(user.password, currentPassword)) {
     const hash = await argon.hash(newPassword);
 
