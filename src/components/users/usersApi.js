@@ -42,6 +42,94 @@ async function routes(fastify) {
     }
   }),
     fastify.route({
+      method: "PUT",
+      url: "/myself/updateEmail",
+      schema: {
+        body: {
+          type: "object",
+          properties: {
+            email: { type: "string" }
+          },
+          required: ["email"]
+        },
+        headers: {
+          type: "object",
+          properties: {
+            authorization: { type: "string" }
+          },
+          required: ["authorization"]
+        },
+        response: {
+          200: {
+            type: "object",
+            properties: {
+              email: { type: "string" }
+            }
+          }
+        }
+      },
+      preHandler: function(request, reply, done) {
+        try {
+          const userId = requireAuthentication(request.headers);
+
+          request.userId = userId;
+          done();
+        } catch (error) {
+          reply.code(401).send(error);
+        }
+      },
+      handler: async function(request, reply) {
+        const { email } = request.body;
+        const data = await usersDAL.updateEmail(request.userId, email);
+
+        reply.send(data);
+      }
+    }),
+    fastify.route({
+      method: "PUT",
+      url: "/myself/updateUsername",
+      schema: {
+        body: {
+          type: "object",
+          properties: {
+            username: { type: "string" }
+          },
+          required: ["username"]
+        },
+        headers: {
+          type: "object",
+          properties: {
+            authorization: { type: "string" }
+          },
+          required: ["authorization"]
+        },
+        response: {
+          200: {
+            type: "object",
+            properties: {
+              username: { type: "string" }
+            }
+          }
+        }
+      },
+      preHandler: function(request, reply, done) {
+        try {
+          const userId = requireAuthentication(request.headers);
+
+          request.userId = userId;
+          done();
+        } catch (error) {
+          reply.code(401).send(error);
+        }
+      },
+      handler: async function(request, reply) {
+        const { username } = request.body;
+        const data = await usersDAL.updateUsername(request.userId, username);
+
+        reply.send(data);
+      }
+    }),
+    fastify.route({
       method: "GET",
       url: "/users/:username",
       schema: {
