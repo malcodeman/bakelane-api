@@ -1,3 +1,5 @@
+import argon from "argon2";
+
 import User from "./usersModel";
 
 export async function create(email, username, password) {
@@ -68,11 +70,41 @@ export async function updateUsername(id, username) {
   return { username };
 }
 
+export async function updatePassword(
+  id,
+  currentPassword,
+  newPassword,
+  confirmPassword
+) {
+  if (newPassword !== confirmPassword) {
+    throw new Error("PasswordsNotMatchingException");
+  }
+  const user = await findById(id);
+
+  if (await argon.verify(user.password, currentPassword)) {
+    const hash = await argon.hash(newPassword);
+
+    await User.update(
+      { password: hash },
+      {
+        where: {
+          id
+        }
+      }
+    );
+
+    return { success: true };
+  } else {
+    throw new Error("NotAuthorizedException");
+  }
+}
+
 export default {
   create,
   findByEmail,
   findByUsername,
   findById,
   updateEmail,
-  updateUsername
+  updateUsername,
+  updatePassword
 };

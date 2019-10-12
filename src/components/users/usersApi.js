@@ -130,6 +130,49 @@ async function routes(fastify) {
       }
     }),
     fastify.route({
+      method: "PUT",
+      url: "/myself/updatePassword",
+      schema: {
+        body: {
+          type: "object",
+          properties: {
+            currentPassword: { type: "string" },
+            newPassword: { type: "string" },
+            confirmPassword: { type: "string" }
+          },
+          required: ["currentPassword", "newPassword", "confirmPassword"]
+        },
+        headers: {
+          type: "object",
+          properties: {
+            authorization: { type: "string" }
+          },
+          required: ["authorization"]
+        }
+      },
+      preHandler: function(request, reply, done) {
+        try {
+          const userId = requireAuthentication(request.headers);
+
+          request.userId = userId;
+          done();
+        } catch (error) {
+          reply.code(401).send(error);
+        }
+      },
+      handler: async function(request, reply) {
+        const { currentPassword, newPassword, confirmPassword } = request.body;
+        const data = await usersDAL.updatePassword(
+          request.userId,
+          currentPassword,
+          newPassword,
+          confirmPassword
+        );
+
+        reply.send(data);
+      }
+    }),
+    fastify.route({
       method: "GET",
       url: "/users/:username",
       schema: {
